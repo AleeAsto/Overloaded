@@ -62,7 +62,7 @@ public class PlayerGrab : MonoBehaviour
         filter.SetLayerMask(grabbableMask);      // incluye 'Objects'
 
         Collider2D[] hits = new Collider2D[16];
-        int count = grabBox.OverlapCollider(filter, hits);
+        int count = grabBox.Overlap(filter, hits);
         if (count <= 0) return;
 
         // Elige el más cercano al centro de la caja con Tag "Grabbable"
@@ -131,7 +131,7 @@ public class PlayerGrab : MonoBehaviour
             filter.SetLayerMask(grabbableMask);
 
             Collider2D[] results = new Collider2D[1];
-            int cnt = grabBox.OverlapCollider(filter, results);
+            int cnt = grabBox.Overlap(filter, results);
             if (cnt > 0 && results[0] != null && results[0].CompareTag("Grabbable"))
                 c = Color.green;
         }
