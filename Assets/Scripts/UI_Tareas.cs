@@ -34,7 +34,7 @@ public class UI_Tareas : MonoBehaviour
 
     public void GenerarListaAleatoria(int cantidad)
     {
-        ClearLista();
+        //ClearLista();
 
         List<string> disponibles = new List<string>(poolTareas);
 
@@ -48,10 +48,10 @@ public class UI_Tareas : MonoBehaviour
             disponibles.RemoveAt(idx);
 
             GameObject go = Instantiate(tareaPrefab, contenedorTareas);
-            RectTransform rt = go.GetComponent<RectTransform>();
+            /*RectTransform rt = go.GetComponent<RectTransform>();
 
             rt.anchoredPosition = new Vector2(-310, -offsetY);
-            offsetY += separacion;
+            offsetY += separacion;*/
 
             Toggle tog = go.GetComponent<Toggle>();
             TextMeshProUGUI label = go.GetComponentInChildren<TextMeshProUGUI>();
@@ -63,10 +63,6 @@ public class UI_Tareas : MonoBehaviour
                 int index = toggles.Count;
                 toggles.Add(tog);
                 tog.onValueChanged.AddListener((val) => OnToggleChanged(val, index));
-            }
-            else
-            {
-                Debug.LogWarning("TareaPrefab necesita un Toggle en su raíz.");
             }
         }
     }
