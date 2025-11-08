@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -18,11 +19,17 @@ public class PlayerMovement : MonoBehaviour
     private bool enEscalera;
     public Collider2D pisoSuperiorCollider;
 
+    public float exitCooldown = 0.25f;
+    private float exitCooldownUntil = 0f;
+
+    private float gravedadOriginal;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        gravedadOriginal = rb.gravityScale;
     }
 
     void Update()
@@ -30,35 +37,56 @@ public class PlayerMovement : MonoBehaviour
         movX = Input.GetAxisRaw("Horizontal");
         movY = Input.GetAxisRaw("Vertical");
 
+        if (movX != 0)
+            sr.flipX = movX < 0;
+
+        if (enEscalera && Mathf.Abs(movX) > 0.1f)
+        {
+            StartExitLadder();
+        }
+    }
+
+    void FixedUpdate()
+    {
         if (enEscalera)
         {
             rb.gravityScale = 0f;
-
             rb.linearVelocity = new Vector2(0f, movY * velocidadEscalera);
-
-            if (movY == 0 && Mathf.Abs(movX) > 0.1f)
-            {
-                rb.linearVelocity = new Vector2(movX * velocidad, 0f);
-                enEscalera = false;
-                pisoSuperiorCollider.enabled = true;
-            }
         }
         else
         {
-            rb.gravityScale = 2f;
+            rb.gravityScale = gravedadOriginal;
             rb.linearVelocity = new Vector2(movX * velocidad, rb.linearVelocity.y);
         }
-
-        if (movX != 0)
-            sr.flipX = movX < 0;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Escalera"))
         {
-            pisoSuperiorCollider.enabled = false;
+            
+            if (pisoSuperiorCollider != null)
+                pisoSuperiorCollider.enabled = false;
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (!other.CompareTag("Escalera")) return;
+
+        if (Time.time < exitCooldownUntil)
+            return;
+
+        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) <= 0.1f)
+        {
             enEscalera = true;
+            pisoSuperiorCollider.enabled = false;
+
+        }
+        else
+        {
+            enEscalera = false;
+            pisoSuperiorCollider.enabled = true;
         }
     }
 
@@ -66,8 +94,19 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.CompareTag("Escalera"))
         {
-            pisoSuperiorCollider.enabled = true;
+            if (pisoSuperiorCollider != null)
+                pisoSuperiorCollider.enabled = true;
+
             enEscalera = false;
         }
+    }
+
+    void StartExitLadder()
+    {
+        enEscalera = false;
+        if (pisoSuperiorCollider != null)
+            pisoSuperiorCollider.enabled = true;
+
+        exitCooldownUntil = Time.time + exitCooldown;
     }
 }

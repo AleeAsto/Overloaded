@@ -419,8 +419,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   velocidad: 10
-  velocidadEscalera: 4
+  velocidadEscalera: 5
   pisoSuperiorCollider: {fileID: 603940002}
+  exitCooldown: 0.25
 --- !u!4 &422605685
 Transform:
   m_ObjectHideFlags: 0
