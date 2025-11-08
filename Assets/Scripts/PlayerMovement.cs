@@ -48,15 +48,17 @@ public class PlayerMovement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Escalera"))
+        if (other.CompareTag("Escalera")) { 
             Debug.Log("TOY EN ESCALERA", gameObject);
             enEscalera = true;
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Escalera"))
+        if (other.CompareTag("Escalera")) { 
             Debug.Log("TOY SALIENDO DE ESCALERA", gameObject);
             enEscalera = false;
+        }
     }
 }
