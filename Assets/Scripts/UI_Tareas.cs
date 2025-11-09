@@ -10,7 +10,7 @@ public class UI_Tareas : MonoBehaviour
     public Transform contenedorTareas;
 
     [Header("Settings")]
-    public int cantidadInicial = 4;
+    public int cantidadInicial = 5;
     [TextArea]
     public List<string> poolTareas = new List<string>()
     {
@@ -38,8 +38,8 @@ public class UI_Tareas : MonoBehaviour
 
         List<string> disponibles = new List<string>(poolTareas);
 
-        float offsetY = -210f;
-        float separacion = 30f;
+        //float offsetY = -210f;
+        //float separacion = 30f;
 
         for (int i = 0; i < cantidad && disponibles.Count > 0; i++)
         {
@@ -56,7 +56,24 @@ public class UI_Tareas : MonoBehaviour
             Toggle tog = go.GetComponent<Toggle>();
             TextMeshProUGUI label = go.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (label != null) label.text = texto;
+            if (label != null)
+            {
+                label.text = texto;
+
+                RectTransform rtLabel = label.GetComponent<RectTransform>();
+
+                rtLabel.anchorMin = new Vector2(0, 0.5f);
+                rtLabel.anchorMax = new Vector2(0, 0.5f);
+                rtLabel.pivot = new Vector2(0, 0.5f);
+
+                rtLabel.anchoredPosition = new Vector2(25f, 0f);
+
+                rtLabel.sizeDelta = new Vector2(300f, rtLabel.sizeDelta.y);
+
+                rtLabel.ForceUpdateRectTransforms();
+            }
+
+
             if (tog != null)
             {
                 tog.isOn = false;
