@@ -5512,8 +5512,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ccb8d472f90c64badb04ba31561354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimerGame
-  startTime: 180
+  startTime: 10
   timerText: {fileID: 999477784}
+  _prefab: {fileID: 796940728737532057, guid: ef92bf4b3fbfe114ba5d33b432ddfe2f, type: 3}
 --- !u!1 &1020697148
 GameObject:
   m_ObjectHideFlags: 0
