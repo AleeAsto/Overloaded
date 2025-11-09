@@ -44,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
         {
             StartExitLadder();
         }
+
+        bool isWalking = !enEscalera && Mathf.Abs(movX) > 0.1f;
+        anim.SetBool("Walk", isWalking);
     }
 
     void FixedUpdate()
@@ -64,7 +67,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.CompareTag("Escalera"))
         {
-            
             if (pisoSuperiorCollider != null)
                 pisoSuperiorCollider.enabled = false;
         }
@@ -81,7 +83,6 @@ public class PlayerMovement : MonoBehaviour
         {
             enEscalera = true;
             pisoSuperiorCollider.enabled = false;
-
         }
         else
         {
