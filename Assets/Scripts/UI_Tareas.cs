@@ -149,7 +149,11 @@ public class UI_Tareas : MonoBehaviour
 
         GameObject g =Instantiate(_prefab);
 
-        g.GetComponent<Animator>().CrossFade("Win", 0.01f);
+        pantalla a = g.GetComponent<pantalla>();
+
+        a.win();
+
+       
     }
 
 
