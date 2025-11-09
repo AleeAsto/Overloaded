@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Beds : MonoBehaviour
+public class Beds : InteractAtumaticTask
 {
     //Tiempo de cambio a la siguiente animacion
     [Header ("Animation")]
@@ -32,22 +32,22 @@ public class Beds : MonoBehaviour
     
     PlayerGrab _player;
 
-    
    
 
-    private void Awake()
+
+
+
+    public override void StartComponents()
     {
         if (interactTrigger != null)
         {
             interactTrigger.isTrigger = true;
             interactTrigger.enabled = true;
         }
-    }
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+        _task = GetComponent<InteractAtumaticTask>();
+
         if (manager == null) manager = FindFirstObjectByType<BedsManager>();
         manager?.RegisterBed(this);
 
@@ -57,26 +57,14 @@ public class Beds : MonoBehaviour
 
         _player = FindFirstObjectByType<PlayerGrab>();
     }
-
-    private void Update()
-    {
-        MakeBed();
-    }
-
     void MakeBed()
     {
-        bool _keyTask = Input.GetKey(_key);
-
-        if (_isMade) return;
-        if (_player.IsCarryingSomething) return;
-
-        if (_keyTask && DetectPlayerInArea())
-        {
+        
             _isMade = true;
             //anim.CrossFade(_animationName, _timeChangeAnimation);
             manager?.OnBedMade(this);
             Debug.Log("Cama Hecha");
-        }
+        
 
     }
 
@@ -105,4 +93,11 @@ public class Beds : MonoBehaviour
 
     public void FinishBed() => _sr.sprite = _sprMadeBed;
 
+    public override void OnCompleted()
+    {
+        base.OnCompleted();
+        if(_sprMadeBed != null) FinishBed();
+        MakeBed();
+        
+    }
 }
