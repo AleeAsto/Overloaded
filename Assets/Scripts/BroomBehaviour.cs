@@ -17,10 +17,18 @@ public class BroomBehaviour : GrabbableBehaviour
     private float tOsc = 0f;
     private Transform self;
 
+    private ParticleSystem polvoParticle;
+    private bool polvoDentro = false;
+    Transform _particlePolvo;
+
+
     void Awake()
     {
         self = transform;
         if (sweepAreaTrigger != null) sweepAreaTrigger.isTrigger = true;
+
+        polvoParticle = GameObject.FindGameObjectWithTag("Polvo").GetComponent<ParticleSystem>();
+        _particlePolvo = polvoParticle.transform;
     }
 
     public override void OnPickedUp(PlayerGrab player)
@@ -57,7 +65,12 @@ public class BroomBehaviour : GrabbableBehaviour
         // Área de barrido activa solo si nos movemos
         SetSweepAreaActive(moving);
 
-        if (!moving || sweepAreaTrigger == null) return;
+        if (!moving || sweepAreaTrigger == null)
+        {
+            polvoDentro = false;
+            polvoParticle.Stop();
+            return; 
+        }
 
         // Aplica limpieza a todos los polvos que toquen el área
         // Usamos OverlapCollider sobre el trigger para recoger polvos cercanos
@@ -65,7 +78,7 @@ public class BroomBehaviour : GrabbableBehaviour
         Collider2D[] hits = new Collider2D[16];
         int count = sweepAreaTrigger.Overlap(filter, hits);
         float amount = sweepStrengthPerSecond * Time.deltaTime;
-
+        polvoDentro = false;
         for (int i = 0; i < count; i++)
         {
             var h = hits[i];
@@ -73,8 +86,22 @@ public class BroomBehaviour : GrabbableBehaviour
 
             // si el collider pertenece a un Polvo
             var p = h.GetComponent<Polvo>();
+           
             if (p == null) p = h.GetComponentInParent<Polvo>();
-            if (p != null) p.ApplySweep(amount);
+            if (p != null) { 
+                p.ApplySweep(amount); 
+                polvoDentro = true;
+                _particlePolvo.position = h.transform.position;
+
+            }
+        }
+        if (polvoDentro)
+        {
+            if (!polvoParticle.isPlaying) polvoParticle.Play();
+        }
+        else
+        {
+            polvoParticle.Stop();
         }
     }
 
@@ -82,5 +109,10 @@ public class BroomBehaviour : GrabbableBehaviour
     {
         if (sweepAreaTrigger == null) return;
         sweepAreaTrigger.enabled = active;
+
+ 
     }
+
+
+ 
 }
