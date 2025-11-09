@@ -23,6 +23,8 @@ public class PlayerGrab : MonoBehaviour
     private Grabbable carriedG;
     private SpriteRenderer sr;
 
+    public bool _isInDoor = false;
+
     bool IsDropBlocked()
     {
         if (carriedT == null) return false;
@@ -53,6 +55,8 @@ public class PlayerGrab : MonoBehaviour
 {
     if (Input.GetKeyDown(grabKey))
     {
+            if (_isInDoor) return;
+
         if (carriedT == null)
         {
             TryGrab();

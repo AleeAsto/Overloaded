@@ -10,10 +10,13 @@ public class Puerta : MonoBehaviour
     bool _indoor = false;
     Animator anim;
 
+    PlayerGrab _play;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
         _player = FindAnyObjectByType<PlayerGrab>().transform;
+        _play = FindAnyObjectByType<PlayerGrab>();
     }
 
     private void Update()
@@ -30,6 +33,7 @@ public class Puerta : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             _indoor = true;
+            _play._isInDoor = true;
             Debug.Log("in");
         }
     }
@@ -39,6 +43,7 @@ public class Puerta : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             _indoor = false;
+            _play._isInDoor = false;
             Debug.Log("out");
         }
     }
