@@ -23,6 +23,24 @@ public class PlayerGrab : MonoBehaviour
     private Grabbable carriedG;
     private SpriteRenderer sr;
 
+    bool IsDropBlocked()
+    {
+        if (carriedT == null) return false;
+        var behaviour = carriedT.GetComponent<GrabbableBehaviour>();
+        return behaviour != null && behaviour.WantsToBlockDrop();
+    }
+
+    void ShowDropBlockHintIfAny()
+    {
+        var behaviour = carriedT?.GetComponent<GrabbableBehaviour>();
+        string hint = behaviour?.GetDropBlockHint();
+        if (!string.IsNullOrEmpty(hint))
+        {
+            // TODO: muestra en tu UI / Debug
+            Debug.Log(hint);
+        }
+    }
+
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -35,8 +53,20 @@ public class PlayerGrab : MonoBehaviour
 {
     if (Input.GetKeyDown(grabKey))
     {
-        if (carriedT == null) TryGrab();
-        else Drop();
+        if (carriedT == null)
+        {
+            TryGrab();
+        }
+        else
+        {
+        
+            if (IsDropBlocked())
+            {
+                ShowDropBlockHintIfAny();
+                return;
+            }
+            Drop();
+        }
     }
 
     // Si estamos llevando algo, actualizar su posición y flip visual

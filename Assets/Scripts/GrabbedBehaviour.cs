@@ -2,12 +2,12 @@ using UnityEngine;
 
 public abstract class GrabbableBehaviour : MonoBehaviour
 {
-    // Llamado cada frame mientras el objeto está siendo cargado
+    public virtual void OnPickedUp(PlayerGrab player) {}
+    public virtual void OnDropped(PlayerGrab player) {}
     public virtual void OnCarriedUpdate(PlayerGrab player, Vector2 moveInput) {}
 
-    // Llamado al ser agarrado
-    public virtual void OnPickedUp(PlayerGrab player) {}
+    public virtual bool WantsToBlockDrop() => false;
 
-    // Llamado al soltarse
-    public virtual void OnDropped(PlayerGrab player) {}
+    // (Opcional) Mensaje/razón para UI si quieres feedback
+    public virtual string GetDropBlockHint() => null;
 }
