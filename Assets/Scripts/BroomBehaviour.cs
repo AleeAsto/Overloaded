@@ -17,7 +17,7 @@ public class BroomBehaviour : GrabbableBehaviour
     private float tOsc = 0f;
     private Transform self;
 
-    private ParticleSystem polvoParticle;
+    [SerializeField]private ParticleSystem polvoParticle;
     private bool polvoDentro = false;
     Transform _particlePolvo;
 
@@ -27,8 +27,8 @@ public class BroomBehaviour : GrabbableBehaviour
         self = transform;
         if (sweepAreaTrigger != null) sweepAreaTrigger.isTrigger = true;
 
-        polvoParticle = GameObject.FindGameObjectWithTag("Polvo").GetComponent<ParticleSystem>();
-        _particlePolvo = polvoParticle.transform;
+        
+       if(polvoParticle != null) _particlePolvo = polvoParticle.transform;
     }
 
     public override void OnPickedUp(PlayerGrab player)
@@ -68,7 +68,7 @@ public class BroomBehaviour : GrabbableBehaviour
         if (!moving || sweepAreaTrigger == null)
         {
             polvoDentro = false;
-            polvoParticle.Stop();
+            SafeParticle(p => { p.Stop(); });
             return; 
         }
 
@@ -91,17 +91,17 @@ public class BroomBehaviour : GrabbableBehaviour
             if (p != null) { 
                 p.ApplySweep(amount); 
                 polvoDentro = true;
-                _particlePolvo.position = h.transform.position;
+                if (polvoParticle != null) _particlePolvo.position = h.transform.position;
 
             }
         }
         if (polvoDentro)
         {
-            if (!polvoParticle.isPlaying) polvoParticle.Play();
+            SafeParticle(p => { if (!p.isPlaying) p.Play(); });
         }
         else
         {
-            polvoParticle.Stop();
+            SafeParticle(p => { if (p.isPlaying) p.Stop(); });
         }
     }
 
@@ -113,6 +113,10 @@ public class BroomBehaviour : GrabbableBehaviour
  
     }
 
+    void SafeParticle(System.Action<ParticleSystem> action)
+    {
+        if (polvoParticle == null || polvoParticle.Equals(null)) return;
+        action(polvoParticle);
+    }
 
- 
 }
