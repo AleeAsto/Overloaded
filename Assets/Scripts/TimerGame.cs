@@ -12,6 +12,8 @@ public class TimerGame : MonoBehaviour
     float remaining;
     bool isRunning;
 
+    [SerializeField] GameObject _prefab;
+
     void Awake()
     {
         remaining = startTime;
@@ -28,8 +30,18 @@ public class TimerGame : MonoBehaviour
 
         UpdateDisplay();
 
+        
+
         if (remaining <= 0f)
+        {
             isRunning = false;
+            GameObject g = Instantiate(_prefab);
+
+            g.GetComponent<Pantalla>().lose();
+        }
+            
+
+        
     }
 
     void UpdateDisplay()
@@ -49,4 +61,6 @@ public class TimerGame : MonoBehaviour
         remaining = newStart;
         UpdateDisplay();
     }
+
+    
 }
