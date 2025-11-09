@@ -3,26 +3,45 @@ using UnityEngine;
 public class Beds : MonoBehaviour
 {
     //Tiempo de cambio a la siguiente animacion
-    [SerializeField]float _timeChangeAnimatino = 0.01f;
+    [Header ("Animation")]
+    Animator anim;
+    [SerializeField]float _timeChangeAnimation = 0.01f;
+    string _animationName = "FastTask";
 
+    [Header ("Tender")]
     bool _isMade = false;
-    [SerializeField] float _madeDuration;
-        
+    [SerializeField] float _makeDuration;
+
+    [Header("Área de interacción")]
+    [Tooltip("Trigger 2D que detecta cuando el jugador está cerca de la cama.")]
+    public Collider2D interactTrigger;
+
+    [Header("Capa donde esta el jugador")]
+    public LayerMask _playerMask;    
 
     [SerializeField] KeyCode _key = KeyCode.E;
 
+    [Header(" Manager UI")]
+    [SerializeField] BedsManager manager;
 
+    //Cambio de Sprite a cama tendida
+    [Header ("Sprite Cama")]
+    [SerializeField] Sprite _sprMadeBed;
 
-    [SerializeField] Collider2D col;
-    Animator anim;
+    SpriteRenderer _sr;
+    
+    PlayerGrab _player;
 
-    [Header (" Manager UI")]
-    [SerializeField]BedsManager manager;
+    
+   
 
     private void Awake()
     {
-        col = GetComponent<Collider2D>();
-        if (anim == null) anim = GetComponent<Animator>();
+        if (interactTrigger != null)
+        {
+            interactTrigger.isTrigger = true;
+            interactTrigger.enabled = true;
+        }
     }
 
 
@@ -31,10 +50,53 @@ public class Beds : MonoBehaviour
     {
         if (manager == null) manager = FindFirstObjectByType<BedsManager>();
         manager?.RegisterBed(this);
+
+        _sr = GetComponent<SpriteRenderer>();
+
+        if (anim == null) anim = GetComponent<Animator>();
+
+        _player = FindFirstObjectByType<PlayerGrab>();
     }
 
-    void MadeBed()
+    void MakeBed()
     {
-        anim.cros
+        bool _keyTask = Input.GetKey(_key);
+
+        if (_isMade) return;
+        if (_player.IsCarryingSomething) return;
+
+        if (_keyTask && DetectPlayerInArea())
+        {
+            _isMade = true;
+            anim.CrossFade(_animationName, _timeChangeAnimation);
+            manager?.OnBedMade(this);
+        }
+
     }
+
+    bool DetectPlayerInArea()
+    {
+        if (interactTrigger == null) return false;
+
+        var filter = new ContactFilter2D
+        {
+            useLayerMask = true,
+            layerMask = _playerMask,
+            useTriggers = true
+        };
+
+        Collider2D[] hits = new Collider2D[16];
+        int count = interactTrigger.Overlap(filter, hits);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (hits[i] != null && hits[i].GetComponent<PlayerGrab>() != null)
+                return true;
+        }
+
+        return false;
+    }
+
+    public void FinishBed() => _sr.sprite = _sprMadeBed;
+
 }

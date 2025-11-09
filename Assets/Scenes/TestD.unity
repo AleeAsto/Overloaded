@@ -2149,6 +2149,7 @@ MonoBehaviour:
   rotationSpeed: 6
   sweepAreaTrigger: {fileID: 796122338}
   sweepStrengthPerSecond: 1
+  polvoParticle: {fileID: 1038098445}
 --- !u!114 &772370660
 MonoBehaviour:
   m_ObjectHideFlags: 0
