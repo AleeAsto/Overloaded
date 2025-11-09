@@ -84,4 +84,5 @@ public class WindowPanel : MonoBehaviour
         }
         sr.color = prev;
     }
+
 }
