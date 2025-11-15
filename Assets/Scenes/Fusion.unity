@@ -7267,7 +7267,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987e9dfe45ec47f42be37e294e3df49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameEnd
-  pantallaPrefab: {fileID: 5083883147555272419, guid: a15276289f5bf6a44849d05cf2474e23, type: 3}
+  PanelTareas: {fileID: 0}
+  pantallaPrefab: {fileID: 796940728737532057, guid: ef92bf4b3fbfe114ba5d33b432ddfe2f, type: 3}
 --- !u!1 &504697027
 GameObject:
   m_ObjectHideFlags: 0
