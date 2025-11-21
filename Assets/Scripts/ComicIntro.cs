@@ -38,7 +38,7 @@ public class ComicIntro : MonoBehaviour
     {
         positions = new[] { topLeft, topRight, bottomLeft, bottomRight };
 
-        comicCg.alpha = 0.5f;
+        comicCg.alpha = 0f;
         pressToPlayText.gameObject.SetActive(false);
         comicImage.anchoredPosition = positions[0];
 
